@@ -180,7 +180,16 @@ dialog::backdrop{background:#201a1bba}
 
 /* Размеры и мерки */
 .sizes{background:var(--paper);border-top:1px solid var(--line)}
-.sizes-grid{display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:50px;align-items:start}
+.garment-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.garment-tabs button{min-height:44px;padding:0 22px;border:1px solid var(--wine);background:transparent;color:var(--wine);font-size:15px}
+.garment-tabs button:hover{background:var(--warm)}
+.garment-tabs button.active{background:var(--wine);color:var(--paper)}
+.measure-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.measure-card{display:block;padding:0;border:1px solid var(--line);background:var(--warm);cursor:zoom-in;transition:border-color .2s}
+.measure-card:hover{border-color:var(--wine)}
+.measure-card img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover}
+.measure-cards-note{margin:14px 0 46px}
+.sizes-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:50px;align-items:start}
 .sizes-grid>*{min-width:0}
 .sizes h3,.care h3{font-family:var(--serif);font-size:28px;line-height:1.1;letter-spacing:-.02em;color:var(--wine);margin:0 0 18px}
 .table-scroll{overflow-x:auto}
@@ -190,21 +199,13 @@ dialog::backdrop{background:#201a1bba}
 .size-table th:first-child{text-align:left}
 .size-table thead th{font-weight:400;color:var(--muted);font-size:13px;border-bottom-color:var(--wine)}
 .size-table tbody th{font-family:var(--serif);font-weight:400;font-size:20px;color:var(--wine)}
-.measure-guide{display:grid;grid-template-columns:110px 1fr;gap:0 22px}
-.measure-guide h3,.measure-guide>.small{grid-column:1/3}
-.measure-figure{margin:0;grid-row:2/3}
-.measure-figure svg{width:100%;height:auto;display:block}
-.measure-figure .body{fill:var(--warm);stroke:var(--line);stroke-width:1.5}
-.measure-figure .lines path{stroke:var(--wine);stroke-width:2;stroke-dasharray:5 4;fill:none}
-.measure-figure .labels text{font-family:var(--serif);font-size:20px;fill:var(--wine)}
-.measure-list{margin:0;padding-left:20px;font-size:15px;line-height:1.55}
-.measure-list li{margin-bottom:10px}
-.measure-list li::marker{font-family:var(--serif);color:var(--wine)}
-.measure-list b{font-weight:400;color:var(--wine)}
 .my-measures{background:var(--warm);padding:28px 26px}
 .my-measures h3{margin-bottom:8px}
-.measure-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.measure-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
 .measure-fields label,.order-field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+.field-label{display:flex;align-items:center;gap:7px}
+.field-num{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--wine);color:var(--paper);font-size:11px;flex:0 0 auto}
+#measures-garment{font-size:.7em;color:var(--muted);letter-spacing:0}
 .measure-fields input,.order-field input{width:100%;min-height:46px;padding:10px 12px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:16px;border-radius:0}
 .measure-fields input:focus,.order-field input:focus,#message:focus{outline:2px solid var(--wine);outline-offset:1px}
 .measure-actions{display:flex;align-items:baseline;gap:18px;margin-top:16px}
@@ -250,10 +251,11 @@ dialog::backdrop{background:#201a1bba}
 
 /* Быстрая связь на телефоне */
 .quick-bar{display:none}
-@media(max-width:1050px){.sizes-grid{grid-template-columns:1fr 1fr}.my-measures{grid-column:1/3}.care-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1050px){.sizes-grid{grid-template-columns:1fr}.care-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){
  .sizes-grid{grid-template-columns:1fr;gap:42px}.my-measures{grid-column:auto;padding:24px 20px}
- .measure-guide{grid-template-columns:86px 1fr;gap:0 16px}.measure-list{font-size:14px}
+ .measure-cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-right:-20px;padding-right:20px}.measure-card{flex:0 0 78%;scroll-snap-align:start}
+ .measure-fields{grid-template-columns:1fr 1fr}.garment-tabs button{flex:1;padding:0 10px}
  .care-list{grid-template-columns:1fr;gap:28px}.care-list li{display:grid;grid-template-columns:58px 1fr;gap:0 18px}.care-mark{grid-row:1/3;margin:0}
  .card-fav{top:8px;right:8px;width:36px;height:36px;font-size:19px}.card-photos{left:8px;bottom:10px;font-size:11px}
  .enquiry-contacts{grid-template-columns:1fr}.enquiry-contacts .button:first-child{grid-column:auto}

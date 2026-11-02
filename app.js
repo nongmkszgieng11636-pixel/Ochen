@@ -310,11 +310,28 @@ function setFilter(name){document.querySelectorAll('[data-filter]').forEach(x=>{
 document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>setFilter(b.dataset.filter));
 $('#quick-fav').onclick=()=>{setFilter('fav');$('#catalog').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})};
 
-/* Мерки */
-const measureFields=[['height','Рост'],['chest','Грудь'],['waist','Талия'],['hips','Бёдра'],['sleeve','Рукав'],['size','Обычный размер']];
+/* Мерки: карточки из серии «Шпаргалка · мерки» мастерской */
+const measureLabels={height:'Рост',shoulders:'Ширина плеч',chest:'Обхват груди',waist:'Обхват талии',hips:'Обхват бёдер',thigh:'Обхват бедра',arm:'Обхват руки вверху',sleeve:'Длина рукава',length:'Длина изделия',toWaist:'Длина до талии',fromWaist:'Длина от талии',side:'Длина по боку',inseam:'Длина шага',rise:'Высота сиденья',ankle:'Обхват щиколотки',size:'Обычный размер'};
+const garments={
+  top:{title:'для джемпера',fields:['shoulders','chest','hips','sleeve','length','arm'],cards:[['merki-dzhemper','Как снять мерки для джемпера: ширина плеч, обхват груди, обхват бёдер, длина рукава, длина изделия, обхват руки вверху'],['shema-dzhemper','Размеры изделия: джемпер прямого силуэта с горловиной резинкой'],['shema-dzhemper-v','Размеры изделия: джемпер с V-вырезом']]},
+  dress:{title:'для платья',fields:['shoulders','chest','hips','sleeve','toWaist','fromWaist','arm'],cards:[['merki-plate','Как снять мерки для платья: ширина плеч, обхват груди, обхват бёдер, длина рукава, длина до талии, длина от талии, обхват руки вверху']]},
+  pants:{title:'для брюк',fields:['waist','hips','thigh','side','inseam','rise','ankle'],cards:[['merki-bryuki','Как снять мерки для брюк: обхват талии, обхват бёдер, обхват бедра, длина по боку, длина шага, высота сиденья, обхват щиколотки'],['shema-bryuki','Размеры изделия: брюки прямого силуэта с поясом на резинке']]}
+};
+const measureOrder=Object.keys(measureLabels);
 function getMeasures(){return store.get('ochen-measures',{})}
-function measuresLine(){const m=getMeasures();const parts=measureFields.filter(([k])=>m[k]&&String(m[k]).trim()).map(([k,l])=>k==='size'?`${l.toLowerCase()} ${m[k]}`:`${l.toLowerCase()} ${m[k]} см`);return parts.join(', ')}
-(function initMeasures(){const f=$('#measures-form');const m=getMeasures();measureFields.forEach(([k])=>{const el=f.elements[k];el.value=m[k]||'';el.addEventListener('input',()=>{const cur=getMeasures();cur[k]=el.value.replace(/[^\d.,]/g,'').slice(0,5);if(el.value!==cur[k])el.value=cur[k];store.set('ochen-measures',cur);$('#measures-status').textContent=measuresLine()?'Мерки сохранены и будут добавлены в сообщение.':''})});if(measuresLine())$('#measures-status').textContent='Мерки сохранены и будут добавлены в сообщение.';$('#measures-clear').onclick=()=>{store.set('ochen-measures',{});measureFields.forEach(([k])=>f.elements[k].value='');$('#measures-status').textContent='Мерки удалены.'}})();
+function measuresLine(){const m=getMeasures();return measureOrder.filter(k=>m[k]&&String(m[k]).trim()).map(k=>k==='size'?`${measureLabels[k].toLowerCase()} ${m[k]}`:`${measureLabels[k].toLowerCase()} ${m[k]} см`).join(', ')}
+function openZoom(src,alt,title='Фактура в деталях'){$('#zoom-title').textContent=title;const im=$('#zoom-image');im.src=src;im.alt=alt;$('#zoom-area').classList.remove('expanded');$('#zoom-toggle').textContent='Увеличить 2×';zd.showModal()}
+function measureStatus(){$('#measures-status').textContent=measuresLine()?'Мерки сохранены и будут добавлены в сообщение.':''}
+function renderGarment(g){const cfg=garments[g];store.set('ochen-garment',g);
+  document.querySelectorAll('[data-garment]').forEach(b=>{const on=b.dataset.garment===g;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
+  $('#measures-garment').textContent=cfg.title;
+  $('#measure-cards').replaceChildren(...cfg.cards.map(([file,alt])=>{const b=document.createElement('button');b.type='button';b.className='measure-card';b.setAttribute('aria-label','Открыть крупно: '+alt);b.innerHTML=`<img src="assets/${file}.webp" alt="${escapeHtml(alt)}" loading="lazy" width="1080" height="1350">`;b.onclick=()=>openZoom(`assets/${file}.webp`,alt,'Шпаргалка · мерки');return b}));
+  const m=getMeasures();const fields=['height',...cfg.fields,'size'];
+  $('#measure-fields').replaceChildren(...fields.map(k=>{const n=cfg.fields.indexOf(k);const l=document.createElement('label');const num=n>=0?`<span class="field-num">${n+1}</span>`:'';l.innerHTML=`<span class="field-label">${num}${measureLabels[k]}</span><input id="m-${k}" name="${k}" inputmode="decimal" placeholder="${k==='size'?'например, 46':'см'}">`;const el=l.querySelector('input');el.value=m[k]||'';el.addEventListener('input',()=>{const cur=getMeasures();cur[k]=el.value.replace(/[^\d.,]/g,'').slice(0,5);if(el.value!==cur[k])el.value=cur[k];store.set('ochen-measures',cur);measureStatus()});return l}));
+  measureStatus()}
+document.querySelectorAll('[data-garment]').forEach(b=>b.onclick=()=>renderGarment(b.dataset.garment));
+$('#measures-clear').onclick=()=>{store.set('ochen-measures',{});document.querySelectorAll('#measure-fields input').forEach(i=>i.value='');$('#measures-status').textContent='Мерки удалены.'};
+{const g=store.get('ochen-garment','top');renderGarment(garments[g]?g:'top')}
 
 /* Карточка модели */
 const sizes=['42','44','46','48','50','52','54','По меркам'];
@@ -344,7 +361,7 @@ copyOnClick('#send-telegram','Telegram');copyOnClick('#send-instagram','Instagra
 function favMessage(){const names=models.filter(m=>favs.has(m.id)).map(m=>'— '+m.name);const ml=measuresLine();let t='Оксана, здравствуйте! Мне понравились модели:\n'+names.join('\n');if(ml)t+='\nМои мерки: '+ml;return t+'\nПодскажите, пожалуйста, стоимость, наличие и срок изготовления.'}
 $('#fav-ask').addEventListener('click',()=>{$('#fav-ask').href=`https://wa.me/${PHONE}?text=${encodeURIComponent(favMessage())}`});
 
-$('#main-photo').onclick=()=>{let im=$('#zoom-image');im.src=`assets/${current.images[photo]}-large.jpg`;im.alt=current.name+', увеличенная фотография';$('#zoom-area').classList.remove('expanded');$('#zoom-toggle').textContent='Увеличить 2×';zd.showModal()};function toggleZoom(){let a=$('#zoom-area');let on=a.classList.toggle('expanded');$('#zoom-toggle').textContent=on?'Уместить целиком':'Увеличить 2×';a.scrollTop=0;a.scrollLeft=0}$('#zoom-toggle').onclick=toggleZoom;$('#zoom-image').onclick=toggleZoom;
+$('#main-photo').onclick=()=>openZoom(`assets/${current.images[photo]}-large.jpg`,current.name+', увеличенная фотография');function toggleZoom(){let a=$('#zoom-area');let on=a.classList.toggle('expanded');$('#zoom-toggle').textContent=on?'Уместить целиком':'Увеличить 2×';a.scrollTop=0;a.scrollLeft=0}$('#zoom-toggle').onclick=toggleZoom;$('#zoom-image').onclick=toggleZoom;
 updateFavCounts();
 render();
 /* Открыть модель по ссылке вида #model-rose */
