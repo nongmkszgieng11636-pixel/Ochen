@@ -319,7 +319,7 @@ function openZoom(src,alt,title='Фактура в деталях'){$('#zoom-tit
 function measureStatus(){$('#measures-status').textContent=measuresLine()?'Мерки сохранены и будут добавлены в сообщение.':''}
 function pressGroup(attr,g){document.querySelectorAll(`[${attr}]`).forEach(b=>{const on=b.getAttribute(attr)===g;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))})}
 function renderCards(g){const cfg=garments[g];pressGroup('data-cards',g);
-  $('#measure-cards').replaceChildren(...cfg.cards.map(([file,alt])=>{const b=document.createElement('button');b.type='button';b.className='measure-card';b.setAttribute('aria-label','Открыть крупно: '+alt);b.innerHTML=`<img src="assets/${file}.webp" alt="${escapeHtml(alt)}" loading="lazy" width="1080" height="1350">`;b.onclick=()=>openZoom(`assets/${file}.webp`,alt,'Шпаргалка · мерки');return b}))}
+  $('#measure-cards').replaceChildren(...cfg.cards.map(([file,alt],i)=>{const b=document.createElement('button');b.type='button';b.className='measure-card';b.setAttribute('aria-label','Открыть крупно: '+alt);b.innerHTML=`<img src="assets/${file}.webp" alt="${escapeHtml(alt)}" loading="${i?'lazy':'eager'}" width="1080" height="1350">`;b.onclick=()=>openZoom(`assets/${file}.webp`,alt,'Шпаргалка · мерки');return b}))}
 function renderGarment(g){const cfg=garments[g];pressGroup('data-garment',g);
   const m=getMeasures();const fields=['height',...cfg.fields,'size'];
   $('#measure-fields').replaceChildren(...fields.map(k=>{const n=cfg.fields.indexOf(k);const l=document.createElement('label');const num=n>=0?`<span class="field-num">${n+1}</span>`:'';l.innerHTML=`<span class="field-label">${num}${measureLabels[k]}</span><input id="m-${k}" name="${k}" inputmode="decimal" placeholder="${k==='size'?'например, 46':'см'}">`;const el=l.querySelector('input');el.value=m[k]||'';el.addEventListener('input',()=>{const cur=getMeasures();cur[k]=el.value.replace(/[^\d.,]/g,'').slice(0,5);if(el.value!==cur[k])el.value=cur[k];store.set('ochen-measures',cur);measureStatus()});return l}));
@@ -374,17 +374,6 @@ document.querySelector('#cookie-policy').addEventListener('click',showPolicy);
 document.querySelector('#open-policy').addEventListener('click',showPolicy);
 document.querySelectorAll('[data-close="policy-dialog"]').forEach(button=>button.addEventListener('click',()=>policyDialog.close()));
 policyDialog.addEventListener('click',event=>{if(event.target===policyDialog)policyDialog.close()});
-
-const heroVideo=document.querySelector('#hero-video');
-const heroPlayback=document.querySelector('#hero-playback');
-function updateHeroPlayback(){const paused=heroVideo.paused;heroPlayback.textContent=paused?'Воспроизвести':'Пауза';heroPlayback.setAttribute('aria-label',paused?'Воспроизвести видео':'Приостановить видео')}
-heroPlayback.addEventListener('click',()=>{if(heroVideo.paused)heroVideo.play().catch(updateHeroPlayback);else heroVideo.pause()});
-heroVideo.addEventListener('play',updateHeroPlayback);
-heroVideo.addEventListener('pause',updateHeroPlayback);
-const heroMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-heroVideo.muted=true;
-if(!heroMotion.matches)heroVideo.play().catch(updateHeroPlayback);
-heroMotion.addEventListener('change',event=>{if(event.matches)heroVideo.pause()});
 
 const registrationDialog=document.querySelector('#registration-dialog');
 const registrationForm=document.querySelector('#registration-form');
