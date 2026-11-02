@@ -339,3 +339,7 @@ dialog::backdrop{background:#201a1bba}
 /* Без ссылки «Смотреть коллекцию» */
 .hero-caption .hero-description{margin-bottom:0}
 @media(max-width:700px){.hero .hero-caption{padding-bottom:28px}}
+
+/* Карточки каталога: фото в ряду на одной высоте */
+.products{align-items:start}
+.product-card{align-self:start;display:flex;flex-direction:column;justify-content:flex-start}
