@@ -347,3 +347,7 @@ dialog::backdrop{background:#201a1bba}
 /* Две ссылки в блоке мастерской */
 .atelier-links{display:flex;flex-wrap:wrap;gap:14px 32px;margin-top:20px}
 .atelier-links .line-link{margin-top:0}
+
+/* Отзывы: слово вместо цифры */
+.rating-score{font-size:46px}
+@media(max-width:700px){.rating-score{font-size:40px}}
