@@ -343,3 +343,7 @@ dialog::backdrop{background:#201a1bba}
 /* Карточки каталога: фото в ряду на одной высоте */
 .products{align-items:start}
 .product-card{align-self:start;display:flex;flex-direction:column;justify-content:flex-start}
+
+/* Две ссылки в блоке мастерской */
+.atelier-links{display:flex;flex-wrap:wrap;gap:14px 32px;margin-top:20px}
+.atelier-links .line-link{margin-top:0}
