@@ -145,7 +145,7 @@ const models=[
   {
     "id": "beige-tee",
     "name": "Бежевая футболка",
-    "category": "tee",
+    "category": ["tee", "summer"],
     "subtitle": "Короткий рукав · фактурная вязка",
     "images": [
       "catalog-77",
@@ -235,7 +235,7 @@ const models=[
   {
     "id": "beige-suit",
     "name": "Бежевый брючный костюм",
-    "category": "suit",
+    "category": ["suit", "summer"],
     "subtitle": "Поло и брюки · продольная фактура",
     "images": [
       "catalog-161",
