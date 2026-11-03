@@ -66,7 +66,7 @@ const models=[
   {
     "id": "orange-jumper",
     "name": "Оранжевый джемпер",
-    "category": "sweater",
+    "category": "jumper",
     "subtitle": "V-образный вырез · длинный рукав",
     "images": [
       "catalog-224",
@@ -114,7 +114,7 @@ const models=[
   {
     "id": "black-mesh",
     "name": "Чёрный лонгслив",
-    "category": "top",
+    "category": "jumper",
     "subtitle": "Открытая горловина · сетчатая фактура",
     "images": [
       "catalog-50",
@@ -145,7 +145,7 @@ const models=[
   {
     "id": "beige-tee",
     "name": "Бежевая футболка",
-    "category": "top",
+    "category": "tee",
     "subtitle": "Короткий рукав · фактурная вязка",
     "images": [
       "catalog-77",
@@ -221,7 +221,7 @@ const models=[
   {
     "id": "grey-polo",
     "name": "Серое поло",
-    "category": "sweater",
+    "category": ["polo", "jumper"],
     "subtitle": "Отложной воротник · длинный рукав",
     "images": [
       "catalog-225",
@@ -250,7 +250,7 @@ const models=[
   {
     "id": "khaki-jumper",
     "name": "Джемпер хаки",
-    "category": "sweater",
+    "category": "jumper",
     "subtitle": "Круглый вырез · свободный силуэт",
     "images": [
       "catalog-246",
@@ -326,7 +326,7 @@ function toggleFav(id){favs.has(id)?favs.delete(id):favs.add(id);store.set('oche
 function favMessage(){const names=models.filter(m=>favs.has(m.id)).map(m=>'— '+m.name);const ml=measuresLine();let t='Оксана, здравствуйте! Мне понравились модели:\n'+names.join('\n');if(ml)t+='\nМои мерки: '+ml;return t+'\nПодскажите, пожалуйста, стоимость, наличие и срок изготовления.'}
 
 /* Каталог */
-function render(filter='all'){currentFilter=filter;const list=models.filter(m=>filter==='all'||(filter==='fav'?favs.has(m.id):m.category===filter));
+function render(filter='all'){currentFilter=filter;const inCat=(m,c)=>[].concat(m.category).includes(c);const list=models.filter(m=>filter==='all'||(filter==='fav'?favs.has(m.id):inCat(m,filter)));
 products.replaceChildren(...list.map(m=>{const card=document.createElement('button');card.type='button';card.className='product-card';card.setAttribute('aria-label','Открыть модель: '+m.name);card.innerHTML=`<div class="card-image"><img src="assets/${m.images[0]}.webp" alt="${escapeHtml(m.name)}" loading="lazy"><span class="card-open" aria-hidden="true">+</span></div><div class="card-text"><h3>${escapeHtml(m.name)}</h3><span>${escapeHtml(priceText(m))}</span></div><p>${escapeHtml(m.subtitle)}</p>${m.composition?`<p class="card-composition">${escapeHtml(m.composition)}</p>`:''}`;card.onclick=()=>openModel(m);return card}));
 $('#count').textContent=`Показано моделей: ${list.length}. Наличие готовых изделий и возможность повтора уточняйте в мастерской.`;$('#fav-actions').hidden=filter!=='fav'}
 function setFilter(name){document.querySelectorAll('[data-filter]').forEach(x=>{const on=x.dataset.filter===name;x.classList.toggle('active',on);x.setAttribute('aria-pressed',String(on))});render(name)}
