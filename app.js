@@ -98,7 +98,7 @@ const models=[
   {
     "id": "beige-dress",
     "name": "Бежевое платье без рукавов",
-    "category": "dress",
+    "category": ["dress", "summer"],
     "subtitle": "Ажурная вязка · V-образный вырез",
     "images": [
       "catalog-39",
