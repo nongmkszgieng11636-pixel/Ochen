@@ -276,7 +276,8 @@ const models=[
     ],
     "description": "Комплект из свободного джемпера с круглым вырезом и широких брюк. Дополнительные кадры показывают посадку и фактуру.",
     "price": "",
-    "composition": ""
+    "composition": "100% меринос",
+    "offers": [{"part": "Джемпер", "work": 8500}, {"part": "Брюки", "work": 8000}]
   },
   {
     "id": "slava",
@@ -306,6 +307,7 @@ function priceText(m){const o=m.offers||[];if(!o.length)return m.price||'По з
   if(o.every(x=>x.ready)){const full=o.reduce((a,x)=>a+x.ready[0],0),sale=o.reduce((a,x)=>a+x.ready[1],0);return `В наличии · ${rub(sale)}`}
   if(m.partial)return 'Цена по запросу';
   if(o.length>1&&o.some(x=>x.ready))return 'Частично в наличии';
+  if(o.length>1&&o.every(x=>x.work))return `На заказ от ${rub(o.reduce((a,x)=>a+x.work,0))}`;
   const w=o.filter(x=>x.work).map(x=>x.work);if(w.length)return `На заказ от ${rub(Math.min(...w))}`;
   return `В наличии от ${rub(Math.min(...o.filter(x=>x.ready).map(x=>x.ready[1])))}`}
 function priceRows(m){const o=m.offers||[];if(!o.length)return [['Стоимость',escapeHtml(m.price||'По запросу')]];const rows=[];
