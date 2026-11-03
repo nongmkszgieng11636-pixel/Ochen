@@ -2,7 +2,7 @@ const models=[
   {
     "id": "rose",
     "name": "Розовый свитер",
-    "category": "top",
+    "category": "sweater",
     "subtitle": "Высокая горловина · свободный силуэт",
     "images": [
       "catalog-55",
@@ -66,7 +66,7 @@ const models=[
   {
     "id": "orange-jumper",
     "name": "Оранжевый джемпер",
-    "category": "top",
+    "category": "sweater",
     "subtitle": "V-образный вырез · длинный рукав",
     "images": [
       "catalog-224",
@@ -176,7 +176,7 @@ const models=[
   {
     "id": "khaki-sweater",
     "name": "Свитер хаки",
-    "category": "top",
+    "category": "sweater",
     "subtitle": "Высокая горловина · свободная посадка",
     "images": [
       "catalog-144",
@@ -221,7 +221,7 @@ const models=[
   {
     "id": "grey-polo",
     "name": "Серое поло",
-    "category": "top",
+    "category": "sweater",
     "subtitle": "Отложной воротник · длинный рукав",
     "images": [
       "catalog-225",
@@ -250,7 +250,7 @@ const models=[
   {
     "id": "khaki-jumper",
     "name": "Джемпер хаки",
-    "category": "top",
+    "category": "sweater",
     "subtitle": "Круглый вырез · свободный силуэт",
     "images": [
       "catalog-246",
