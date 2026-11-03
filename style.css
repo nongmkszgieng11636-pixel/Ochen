@@ -351,3 +351,9 @@ dialog::backdrop{background:#201a1bba}
 /* Отзывы: слово вместо цифры */
 .rating-score{font-size:46px}
 @media(max-width:700px){.rating-score{font-size:40px}}
+
+/* Цены в карточке модели */
+.specs>div span:last-child{text-align:right}
+.specs s{color:var(--muted);margin-right:6px;font-size:.92em}
+.specs b{color:var(--wine);font-weight:600}
+.specs-note{font-size:12px;color:var(--muted);margin:8px 0 0}

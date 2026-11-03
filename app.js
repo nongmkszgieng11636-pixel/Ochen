@@ -12,7 +12,8 @@ const models=[
     ],
     "description": "Объёмный свитер с высокой горловиной и широкими рукавами.",
     "price": "",
-    "composition": ""
+    "composition": "100% меринос",
+    "offers": [{"part": "", "work": 8000}]
   },
   {
     "id": "milk-dress",
@@ -27,7 +28,8 @@ const models=[
     ],
     "description": "Прямое трикотажное платье с V-образным вырезом. Можно носить свободно или с ремнём. У этой модели ощутимая фактура: если кожа чувствительная, обсудим более нежную пряжу.",
     "price": "",
-    "composition": ""
+    "composition": "72% меринос, 18% полиамид, 10% полиэстер",
+    "offers": []
   },
   {
     "id": "khaki-cardigan",
@@ -42,7 +44,8 @@ const models=[
     ],
     "description": "Свободный кардиган с V-образным вырезом и объёмными рукавами. В галерее показаны варианты с застёжкой и завязанными полочками.",
     "price": "",
-    "composition": ""
+    "composition": "30% кидмохер, 40% фиброполиакрил, 30% фиброполиамид",
+    "offers": [{"part": "", "work": 13000}]
   },
   {
     "id": "milk-set",
@@ -57,7 +60,8 @@ const models=[
     ],
     "description": "Комплект из свободного джемпера с круглым вырезом и длинной юбки. Обе вещи можно носить вместе или отдельно.",
     "price": "",
-    "composition": ""
+    "composition": "80% меринос ягнёнка, 20% полиамид",
+    "offers": [{"part": "Джемпер", "ready": [15000, 9300]}, {"part": "Юбка", "ready": [10000, 7000]}]
   },
   {
     "id": "orange-jumper",
@@ -72,7 +76,8 @@ const models=[
     ],
     "description": "Джемпер яркого оранжевого цвета с V-образным вырезом и отделкой резинкой по низу и на манжетах.",
     "price": "",
-    "composition": ""
+    "composition": "кашемир, ангора, меринос, вискоза, полиамид",
+    "offers": [{"part": "", "work": 7500}]
   },
   {
     "id": "black-skirt-set",
@@ -87,7 +92,8 @@ const models=[
     ],
     "description": "Чёрный комплект из джемпера с круглым вырезом и юбки миди. Свободный верх и спокойный силуэт.",
     "price": "",
-    "composition": ""
+    "composition": "35% суперкидмохер, 35% беби альпака, 30% полиамид",
+    "offers": [{"part": "Джемпер", "work": 7500}, {"part": "Юбка", "ready": [16000, 11500]}]
   },
   {
     "id": "beige-dress",
@@ -133,7 +139,8 @@ const models=[
     ],
     "description": "Серый комплект из свободного джемпера и юбки миди. Крупный план показывает мягкую ворсистую фактуру.",
     "price": "",
-    "composition": ""
+    "composition": "40% беби альпака, 10% меринос экстрафайн, 50% полиамид",
+    "offers": [{"part": "Джемпер", "ready": [15000, 13500]}, {"part": "Юбка", "ready": [9000, 7800]}]
   },
   {
     "id": "beige-tee",
@@ -179,7 +186,8 @@ const models=[
     ],
     "description": "Свитер с высокой горловиной, свободными рукавами и отделкой резинкой по низу и на манжетах.",
     "price": "",
-    "composition": ""
+    "composition": "30% кидмохер, 40% фиброполиакрил, 30% фиброполиамид",
+    "offers": [{"part": "", "work": 8000}]
   },
   {
     "id": "grey-suit",
@@ -194,7 +202,9 @@ const models=[
     ],
     "description": "Джемпер свободного силуэта и юбка миди. Комплект можно носить вместе или сочетать каждую вещь с другими элементами гардероба.",
     "price": "",
-    "composition": ""
+    "composition": "юбка: 10% кашемир, 40% меринос, 25% вискоза, 25% акрил",
+    "partial": true,
+    "offers": [{"part": "Юбка", "work": 7000}]
   },
   {
     "id": "black-lurex",
@@ -219,7 +229,8 @@ const models=[
     ],
     "description": "Трикотажное поло с открытым вырезом и отложным воротником. Спокойный серый оттенок для повседневных сочетаний.",
     "price": "",
-    "composition": ""
+    "composition": "100% хлопок",
+    "offers": [{"part": "", "work": 8500}]
   },
   {
     "id": "beige-suit",
@@ -249,7 +260,8 @@ const models=[
     ],
     "description": "Свободный джемпер с круглой горловиной. В галерее показаны общий вид, спинка и фактура с отделкой по низу.",
     "price": "",
-    "composition": ""
+    "composition": "30% кидмохер, 40% фиброполиакрил, 30% фиброполиамид",
+    "offers": [{"part": "", "ready": [15000, 12500]}]
   },
   {
     "id": "dark-trouser-set",
@@ -288,7 +300,19 @@ const products=document.querySelector('#products'),pd=document.querySelector('#p
 let current=models[0],photo=0,selectedSize='',currentFilter='all';
 const $=sel=>document.querySelector(sel);
 const store={get(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch{return f}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
-const priceText=m=>m.price||'По запросу';
+/* Цены: offers — части модели. ready: [обычная цена, цена со скидкой за готовое в наличии]; work: цена за работу на заказ, без пряжи */
+const rub=n=>n.toLocaleString('ru-RU').replace(/ /g,' ')+' ₽';
+function priceText(m){const o=m.offers||[];if(!o.length)return m.price||'По запросу';
+  if(o.every(x=>x.ready)){const full=o.reduce((a,x)=>a+x.ready[0],0),sale=o.reduce((a,x)=>a+x.ready[1],0);return `В наличии · ${rub(sale)}`}
+  if(m.partial)return 'Цена по запросу';
+  if(o.length>1&&o.some(x=>x.ready))return 'Частично в наличии';
+  const w=o.filter(x=>x.work).map(x=>x.work);if(w.length)return `На заказ от ${rub(Math.min(...w))}`;
+  return `В наличии от ${rub(Math.min(...o.filter(x=>x.ready).map(x=>x.ready[1])))}`}
+function priceRows(m){const o=m.offers||[];if(!o.length)return [['Стоимость',escapeHtml(m.price||'По запросу')]];const rows=[];
+  o.forEach(x=>{const name=x.part?x.part+' · ':'';
+    if(x.ready)rows.push([name+'в наличии',`<s>${rub(x.ready[0])}</s> <b>${rub(x.ready[1])}</b>`]);
+    if(x.work)rows.push([name+'на заказ по меркам',`${rub(x.work)} за работу + пряжа`])});
+  return rows.map(([a,b])=>[a.charAt(0).toUpperCase()+a.slice(1),b])}
 const escapeHtml=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* Избранное: кнопка в карточке модели, вкладка появляется, когда есть отложенные */
@@ -343,7 +367,9 @@ const sizes=['42','44','46','48','50','52','54','По меркам'];
 function renderSizes(){$('#size-options').replaceChildren(...sizes.map(sz=>{const b=document.createElement('button');b.type='button';b.textContent=sz;b.setAttribute('aria-pressed',String(sz===selectedSize));b.className=sz===selectedSize?'on':'';b.onclick=()=>{selectedSize=selectedSize===sz?'':sz;renderSizes()};return b}))}
 function setPhoto(i){const n=current.images.length;photo=(i+n)%n;const img=$('#detail-image');img.src=`assets/${current.images[photo]}.webp`;img.alt=current.name+', ракурс '+(photo+1);$('#photo-count').textContent=n>1?`${photo+1} / ${n}`:'';$('#photo-prev').hidden=$('#photo-next').hidden=n<2;document.querySelectorAll('#thumbs button').forEach((b,j)=>{b.classList.toggle('selected',j===photo);b.setAttribute('aria-pressed',String(photo===j))})}
 function setHash(h){try{history.replaceState(null,'',h?'#'+h:location.pathname+location.search)}catch{}}
-function openModel(m){current=m;$('#product-title').textContent=m.name;$('#product-description').textContent=m.description;$('#spec-price').textContent=priceText(m);$('#spec-composition').textContent=m.composition||'Уточняется';$('#enquiry').hidden=true;$('#order-form').hidden=false;$('#share-status').textContent='';$('#order-form').reset();selectedSize='';const saved=getMeasures();if(saved.size&&sizes.includes(String(saved.size)))selectedSize=String(saved.size);renderSizes();renderGarment(garmentFor(m));$('#measures-details').open=false;$('#thumbs').replaceChildren(...m.images.map((id,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<img src="assets/${id}.webp" alt="">`;b.setAttribute('aria-label','Ракурс '+(i+1));b.onclick=()=>setPhoto(i);return b}));setPhoto(0);syncFav();if(!pd.open)pd.showModal();pd.scrollTop=0;setHash('model-'+m.id)}
+function renderSpecs(m){const hasReady=(m.offers||[]).some(x=>x.ready);const rows=[...priceRows(m),['Состав',escapeHtml(m.composition||'Уточняется')],['Срок на заказ','от 3 до 6 недель'],['Наличие',hasReady?((m.offers||[]).every(x=>x.ready)?'Готовое изделие в одном размере, как на фото':'Готовая часть — в одном размере, как на фото'):'Уточнить в мастерской']];
+  $('#specs').innerHTML=rows.map(([a,b])=>`<div><span>${a}</span><span>${b}</span></div>`).join('')+(hasReady?'<p class="specs-note">Цена со скидкой — на готовое изделие из наличия.</p>':'')}
+function openModel(m){current=m;$('#product-title').textContent=m.name;$('#product-description').textContent=m.description;renderSpecs(m);$('#enquiry').hidden=true;$('#order-form').hidden=false;$('#share-status').textContent='';$('#order-form').reset();selectedSize='';const saved=getMeasures();if(saved.size&&sizes.includes(String(saved.size)))selectedSize=String(saved.size);renderSizes();renderGarment(garmentFor(m));$('#measures-details').open=false;$('#thumbs').replaceChildren(...m.images.map((id,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<img src="assets/${id}.webp" alt="">`;b.setAttribute('aria-label','Ракурс '+(i+1));b.onclick=()=>setPhoto(i);return b}));setPhoto(0);syncFav();if(!pd.open)pd.showModal();pd.scrollTop=0;setHash('model-'+m.id)}
 pd.addEventListener('close',()=>{if(location.hash.startsWith('#model-'))setHash('')});
 pd.addEventListener('click',e=>{const a=e.target.closest('[data-goto-sizes]');if(a){e.preventDefault();pd.close();$('#sizes').scrollIntoView()}});
 $('#photo-prev').onclick=()=>setPhoto(photo-1);$('#photo-next').onclick=()=>setPhoto(photo+1);
